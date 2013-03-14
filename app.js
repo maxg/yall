@@ -68,7 +68,7 @@ app.get('*', function(req, res, next) {
     //// To fake different users from different browsers:
     //// username: md5(req.headers['user-agent']).substr(0,3) + username,
     username: username,
-    gravator: md5(username)
+    gravatar: md5(username)
   };
   next();
 });
