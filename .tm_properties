@@ -1,0 +1,3 @@
+projExcludes = "node_modules"
+excludeInFileChooser  = "{$excludeInFileChooser,$projExcludes}" 
+excludeInFolderSearch = "{$excludeInFolderSearch,$projExcludes}"
