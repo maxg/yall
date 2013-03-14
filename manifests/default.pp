@@ -22,6 +22,14 @@ package {
     require => Exec['add-apt node'];
 }
 
+exec {
+  'get bootstrap':
+    command => 'wget -q -O - http://bootswatch.com/superhero/bootstrap.min.css | sed "s/@import[^;]*;//" > bootstrap-superhero.min.css',
+    path => [ '/bin', '/usr/bin' ],
+    cwd => '/vagrant/public/bootstrap/css',
+    creates => '/vagrant/public/bootstrap/css/bootstrap-superhero.min.css';
+}
+
 # Generate SSL certificate
 exec {
   'ssl certificate':
