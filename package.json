@@ -1,0 +1,16 @@
+{
+  "name": "yall",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node app"
+  },
+  "dependencies": {
+    "async": "~0.2.6",
+    "connect": "~2.7.2",
+    "express": "~3.1.0",
+    "jade": "~0.28.1",
+    "jade-browser": "~0.0.9",
+    "socket.io": "~0.9.13"
+  }
+}

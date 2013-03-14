@@ -1,0 +1,72 @@
+@import url(https://fonts.googleapis.com/css?family=Capriola:300,400,700);
+
+html {
+  height: 100%;
+}
+
+body {
+  padding-top: 30px;
+  padding-bottom: 60px;
+}
+
+body, h1, h2, h3, textarea {
+  font-family: Capriola, "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+h1, h2, h3 {
+  color: #F25781;
+  text-shadow: -2px 2px 0 #4A1A2C;
+}
+
+h3 {
+  font-size: 15px;
+}
+
+.head-height {
+  line-height: 40px;
+}
+
+.container-narrow {
+  margin: 0 auto;
+  max-width: 700px;
+}
+
+hr {
+  margin: 30px 0;
+  border-width: 3px;
+  clear: both;
+}
+
+p, textarea {
+  font-size: 22px;
+  line-height: 30px;
+}
+
+.well p:last-child {
+  margin-bottom: 0;
+}
+
+textarea {
+  display: block;
+  margin: 0 auto;
+  width: 90%;
+  resize: vertical;
+  color: #ece9d7;
+  background: #45515f;
+  border: 1px solid #45515f;
+}
+
+#question i {
+  color: #777;
+}
+
+img.gravatar {
+  width: 30px;
+  height: 30px;
+  margin: 3px;
+}
+
+.gravatar-small img.gravatar {
+  width: 15px;
+  height: 15px;
+}

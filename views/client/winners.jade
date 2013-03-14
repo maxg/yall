@@ -1,0 +1,5 @@
+each winner in winners
+  li.well.well-small(class="gravatar-#{winner.items.length > 32 ? 'small' : 'large'}")
+    p= winner.label
+    each item in winner.items
+      img.gravatar(src="https://secure.gravatar.com/avatar/#{item.gravatar}?s=60&d=mm")

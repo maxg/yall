@@ -1,0 +1,28 @@
+extends layout
+
+block content
+  h2 This is #{room.name} y&rsquo;all
+  div.head-height.pull-right
+    each owner in owners
+      span= owner.username
+      img.gravatar(src="https://secure.gravatar.com/avatar/#{owner.gravatar}?s=60&d=mm")
+  h3 Question
+  if userIsOwner
+    textarea#question(rows=2, placeholder='Question here...')
+  else
+    div.well.well-small
+      p#question= room.question
+    div.head-height.pull-right
+      span= user.username
+      img.gravatar(src="https://secure.gravatar.com/avatar/#{user.gravatar}?s=60&d=mm")
+    h3 My answer
+    textarea#answer(rows=3, spellcheck='false')
+  h3 Common answers
+  ul#winners.unstyled
+  
+  script(src='//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js')
+  script(src='//#{ioserver}/socket.io/socket.io.js')
+  script.
+    var ioserver = '#{ioserver}';
+  script(src='/jade/templates.js')
+  script(src='/js/room.js')
