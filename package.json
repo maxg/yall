@@ -12,5 +12,8 @@
     "jade": "~0.28.1",
     "jade-browser": "~0.0.9",
     "socket.io": "~0.9.13"
+  },
+  "engines": {
+    "node": "~0.8.18"
   }
 }
