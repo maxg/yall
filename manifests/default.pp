@@ -17,7 +17,7 @@ package {
   [ 'vim', 'python-software-properties', 'git' ]:
     ensure => 'installed';
   
-  [ 'nodejs', 'npm' ]:
+  [ 'nodejs' ]:
     ensure => 'installed',
     require => Exec['add-apt node'];
 }
