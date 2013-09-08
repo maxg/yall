@@ -1,30 +1,29 @@
-# Update packages before installing
-stage { 'pre': }
-class { apt: stage => 'pre'; }
-class apt {
-  exec { 'apt-get update': command => '/usr/bin/apt-get update'; }
+# Update packages list before attempting to install any
+exec {
+  'apt-get update':
+    command => '/usr/bin/apt-get update';
 }
 Exec['apt-get update'] -> Package <| |>
 
+# Add archive for Node.js before attempting to install it
 exec {
   'add-apt node':
-    command => '/usr/bin/add-apt-repository ppa:chris-lea/node.js && /usr/bin/apt-get update',
+    command => 'add-apt-repository ppa:chris-lea/node.js && apt-get update',
+    path => [ '/usr/bin', '/bin' ],
     require => Package['python-software-properties'],
-    unless => '/usr/bin/test -f /etc/apt/sources.list.d/chris-lea-node_js*.list';
+    creates => '/etc/apt/sources.list.d/chris-lea-node_js-precise.list';
 }
+Exec['add-apt node'] -> Package['nodejs']
 
+# Install packages
 package {
-  [ 'vim', 'python-software-properties', 'git' ]:
+  [ 'vim', 'python-software-properties', 'git', 'nodejs' ]:
     ensure => 'installed';
-  
-  [ 'nodejs' ]:
-    ensure => 'installed',
-    require => Exec['add-apt node'];
 }
 
 exec {
   'get bootstrap':
-    command => 'wget -q -O - http://bootswatch.com/superhero/bootstrap.min.css | sed "s/@import[^;]*;//" > bootstrap-superhero.min.css',
+    command => 'wget -q -O - http://bootswatch.com/2/superhero/bootstrap.min.css | sed "s/@import[^;]*;//" > bootstrap-superhero.min.css',
     path => [ '/bin', '/usr/bin' ],
     cwd => '/vagrant/public/bootstrap/css',
     creates => '/vagrant/public/bootstrap/css/bootstrap-superhero.min.css';
