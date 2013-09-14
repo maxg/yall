@@ -8,7 +8,7 @@ block content
       img.gravatar(src="https://secure.gravatar.com/avatar/#{owner.gravatar}?s=60&d=mm")
   h3 Question
   if userIsOwner
-    textarea#question(rows=2, placeholder='Question here...')
+    textarea#question(rows=2, placeholder='Question here...')= room.question
   else
     div.well.well-small
       p#question= room.question
