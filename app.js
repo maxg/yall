@@ -87,7 +87,7 @@ app.get('/:room', function(req, res) {
   res.render('room', {
     ioserver: [ req.host, ioserver.address().port ].join(':'),
     room: room,
-    userIsOwner: room.owners().indexOf(req.session.user.username) >= 0,
+    userIsOwner: room.hasOwner(req.session.user.username),
     owners: room.owners().map(function(username) { return {
       username: username,
       gravatar: md5(username)
@@ -110,7 +110,7 @@ io.on('connection', function(socket) {
   
   socket.on('question', function(data) {
     if ( ! room) { return; }
-    if ( room.owners().indexOf(user.username) < 0) { return; }
+    if ( ! room.hasOwner(user.username)) { return; }
     console.log('question', room, data);
     
     room.ask(data.text);

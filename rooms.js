@@ -42,6 +42,9 @@ function createRoom(name) {
     console.log('owners are', owners);
     return Object.keys(owners);
   };
+  emitter.hasOwner = function(username) {
+    return owners.hasOwnProperty(username);
+  };
   
   emitter.ask = function(text) {
     emitter.question = text;
