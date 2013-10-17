@@ -12,16 +12,13 @@ function debounce(fn, wait) {
 
 var socket = io.connect(ioserver);
 socket.on('connect', function() {
-  // console.log('connect');
   socket.emit('join', { room: window.location.pathname });
 });
 
 $('textarea#question').keyup(debounce(function() {
-  //console.log('question', $(this).val());
   socket.emit('question', { text: $(this).val() });
 }, 250));
 $('textarea#answer').keyup(debounce(function() {
-  // console.log('answer', $(this).val());
   socket.emit('answer', { text: $(this).val() });
 }, 500));
 

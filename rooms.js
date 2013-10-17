@@ -4,7 +4,6 @@ var fork = require('child_process').fork;
 const rooms = {};
 
 exports.setupRoom = function(name, username, sockets) {
-  console.log('setupRoom', name, username);
   if (rooms.hasOwnProperty(name)) {
     return rooms[name];
   }
@@ -25,7 +24,6 @@ exports.setupRoom = function(name, username, sockets) {
 }
 
 exports.getRoom = function(name) {
-  console.log('getRoom', name);
   return rooms[name];
 };
 
@@ -45,11 +43,9 @@ function createRoom(name) {
   };
   
   emitter.addOwner = function(username) {
-    console.log('addOwner', username);
     owners[username] = true;
   };
   emitter.owners = function() {
-    console.log('owners are', owners);
     return Object.keys(owners);
   };
   emitter.hasOwner = function(username) {
@@ -61,7 +57,6 @@ function createRoom(name) {
     emitter.emit('ask', text);
   }
   emitter.put = function(key, val) {
-    console.log('put', key, val);
     child.send({ put: key, val: val });
   };
   

@@ -86,7 +86,6 @@ app.get('/', function(req, res) {
 });
 
 app.get('/:room', function(req, res) {
-  console.log('room', req.session);
   var room = rooms.setupRoom(req.params.room, req.session.user.username, io.sockets);
   res.render('room', {
     ioserver: [ req.host, ioserver.address().port ].join(':'),
@@ -125,12 +124,10 @@ app.post('/:room/settings', function(req, res) {
 });
 
 io.on('connection', function(socket) {
-  console.log('connection');
   var user = socket.handshake.session.user;
   var room;
   
   socket.on('join', function(data) {
-    console.log('join', data, user);
     room = rooms.getRoom(data.room.substr(1)); // remove leading slash
     socket.join(data.room);
     socket.emit('ask', room.question);
@@ -144,14 +141,12 @@ io.on('connection', function(socket) {
   socket.on('question', function(data) {
     if ( ! room) { return; }
     if ( ! room.hasOwner(user.username)) { return; }
-    console.log('question', room, data);
     
     room.ask(data.text);
   });
   
   socket.on('answer', function(data) {
     if ( ! room) { return; }
-    console.log('answer', room, data);
     
     if (room.state.revealed && ! room.settings.reveal) { return; }
     
@@ -167,7 +162,6 @@ io.on('connection', function(socket) {
   socket.on('reveal', function() {
     if ( ! room) { return; }
     if ( ! room.hasOwner(user.username)) { return; }
-    console.log('reveal', room);
     
     room.reveal();
   });
@@ -175,7 +169,6 @@ io.on('connection', function(socket) {
   socket.on('archive', function() {
     if ( ! room) { return; }
     if ( ! room.hasOwner(user.username)) { return; }
-    console.log('archive', room);
     
     // TODO archive question and answers
     room.reset();

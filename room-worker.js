@@ -29,7 +29,6 @@ function put(key, val) {
 }
 
 process.on('message', function(msg) {
-  console.log('msg', msg);
   if (msg.put) {
     put(msg.put, msg.val);
   }
