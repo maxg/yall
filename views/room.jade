@@ -1,7 +1,10 @@
 extends layout
 
 block content
-  h2 This is #{room.name} y&rsquo;all
+  h2 This is #{room.name} y&rsquo;all&nbsp;
+    if userIsOwner
+      small &middot;&nbsp;
+        a(href="/#{room.name}/settings") settings
   div.head-height.pull-right
     each owner in owners
       span= owner.username
@@ -18,11 +21,13 @@ block content
     h3 My answer
     textarea#answer(rows=3, spellcheck='false')
   h3 Common answers
+    span#controls
   ul#winners.unstyled
   
-  script(src='//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js')
+  script(src='//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js')
   script(src='//#{ioserver}/socket.io/socket.io.js')
   script.
-    var ioserver = '#{ioserver}';
+    var ioserver = !{JSON.stringify(ioserver)};
+    var userIsOwner = !{JSON.stringify(userIsOwner)};
   script(src='/jade/templates.js')
   script(src='/js/room.js')

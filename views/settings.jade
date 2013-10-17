@@ -1,0 +1,15 @@
+extends layout
+
+block content
+  h2 Configure #{room.name} y&rsquo;all
+  div.head-height.pull-right
+    each owner in owners
+      span= owner.username
+      img.gravatar(src="https://secure.gravatar.com/avatar/#{owner.gravatar}?s=60&d=mm")
+  h3 Q&amp;A mode
+  form(method='post')
+    div.btn-group.btn-group-vertical
+      button.btn(class=room.settings.reveal ? 'btn-info' : 'btn-inverse', name='reveal', value='true') Quick: common answers visible immediately
+      button.btn(class=room.settings.reveal ? 'btn-inverse' : 'btn-info', name='reveal', value='false') Deliberate: common answers hidden until revealed
+
+  h3: a(href="/#{room.name}") &larr; Back to the room

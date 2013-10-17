@@ -9,13 +9,17 @@ body {
   padding-bottom: 60px;
 }
 
-body, h1, h2, h3, textarea {
+body, h1, h2, h3, h1 small, h2 small, h3 small, textarea, button {
   font-family: Capriola, "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-h1, h2, h3 {
+h1, h2, h3, h1 small, h2 small, h3 small {
   color: #F25781;
   text-shadow: -2px 2px 0 #4A1A2C;
+}
+
+h1 .muted, h2 .muted, h3 .muted {
+  text-shadow: -2px 2px 0 #2C2C2C;
 }
 
 h3 {
@@ -35,6 +39,11 @@ hr {
   margin: 30px 0;
   border-width: 3px;
   clear: both;
+}
+
+a {
+  color: #e36b23;
+  text-shadow: -2px 2px 0 #612c0c;
 }
 
 p, textarea {
@@ -60,10 +69,15 @@ textarea {
   color: #777;
 }
 
+.btn, .btn:hover, .btn:active {
+  color: #ece9d7;
+}
+
 img.gravatar {
   width: 30px;
   height: 30px;
   margin: 3px;
+  border-radius: 3px;
 }
 
 .gravatar-small img.gravatar {

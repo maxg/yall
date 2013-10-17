@@ -61,6 +61,10 @@ io.set('authorization', function(req, accept) {
   });
 });
 
+app.param('room', function(req, res, next, room) {
+  if (room.match(/^\w[\w.-]*$/)) { next(); } else { next('route'); }
+});
+
 app.get('*', function(req, res, next) {
   var cert = req.connection.getPeerCertificate();
   var username = cert.subject.emailAddress.toLowerCase();
@@ -95,6 +99,31 @@ app.get('/:room', function(req, res) {
   });
 });
 
+app.get('/:room/settings', function(req, res) {
+  var room = rooms.getRoom(req.params.room);
+  if ( ! room) { return res.status(404).render('error', { title: 'No such room' }); }
+  if ( ! room.hasOwner(req.session.user.username)) {
+    return res.render('error', { title: 'Permission denied' });
+  }
+  res.render('settings', {
+    room: room,
+    owners: room.owners().map(function(username) { return {
+      username: username,
+      gravatar: md5(username)
+    }; })
+  });
+});
+
+app.post('/:room/settings', function(req, res) {
+  var room = rooms.getRoom(req.params.room);
+  if ( ! room) { return res.status(404).render('error', { title: 'No such room' }); }
+  if ( ! room.hasOwner(req.session.user.username)) {
+    return res.render('error', { title: 'Permission denied' });
+  }
+  room.settings.reveal = req.body.reveal == 'true';
+  res.redirect(req.path);
+});
+
 io.on('connection', function(socket) {
   console.log('connection');
   var user = socket.handshake.session.user;
@@ -105,7 +134,11 @@ io.on('connection', function(socket) {
     room = rooms.getRoom(data.room.substr(1)); // remove leading slash
     socket.join(data.room);
     socket.emit('ask', room.question);
-    socket.emit('winners', room.winners);
+    socket.emit('winners', room.state, room.visibleWinners());
+    if (room.hasOwner(user.username)) {
+      socket.join(data.room + '#owners');
+      socket.emit('winners#owners', room.state, room.hiddenWinners());
+    }
   });
   
   socket.on('question', function(data) {
@@ -120,6 +153,8 @@ io.on('connection', function(socket) {
     if ( ! room) { return; }
     console.log('answer', room, data);
     
+    if (room.state.revealed && ! room.settings.reveal) { return; }
+    
     data.gravatar = user.gravatar;
     room.put(user.username, data);
     
@@ -127,6 +162,23 @@ io.on('connection', function(socket) {
     //// setTimeout(function() {
     ////   room.put('rcm@mit.edu', { text: data.text, gravatar: md5('rcm@mit.edu') });
     //// }, 4000 * Math.random());
+  });
+  
+  socket.on('reveal', function() {
+    if ( ! room) { return; }
+    if ( ! room.hasOwner(user.username)) { return; }
+    console.log('reveal', room);
+    
+    room.reveal();
+  });
+  
+  socket.on('archive', function() {
+    if ( ! room) { return; }
+    if ( ! room.hasOwner(user.username)) { return; }
+    console.log('archive', room);
+    
+    // TODO archive question and answers
+    room.reset();
   });
 });
 

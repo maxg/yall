@@ -25,15 +25,34 @@ $('textarea#answer').keyup(debounce(function() {
   socket.emit('answer', { text: $(this).val() });
 }, 500));
 
-socket.on('ask', function(question) {
-  // console.log('ask', question);
+$('#controls').on('click', '#reveal', function() {
+  try { socket.emit('reveal'); } finally { return false; }
+});
+$('#controls').on('click', '#archive', function() {
+  try { socket.emit('archive'); } finally { return false; }
+});
+
+function ask(question) {
   if (question) {
     $('p#question').text(question);
   } else {
     $('p#question').html('<i>No question yet...</i>');
   }
-});
-socket.on('winners', function(winners) {
-  // console.log('winners', winners);
+}
+socket.on('ask', ask);
+
+function update(state, winners) {
+  if (userIsOwner) {
+    $('#controls').html(jade.render('controls', { state: state }));
+  }
   $('#winners').html(jade.render('winners', { winners: winners }));
-});
+}
+socket.on(userIsOwner ? 'winners#owners' : 'winners', update);
+
+function reset(state) {
+  ask('');
+  update(state, []);
+  $('textarea#question').val('');
+  $('textarea#answer').val('');
+}
+socket.on('reset', reset);
