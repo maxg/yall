@@ -1,5 +1,6 @@
 .DS_Store
 .vagrant
+config/*.js
 node_modules
 public/bootstrap/**/*.css
 *.pem

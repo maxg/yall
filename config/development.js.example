@@ -1,0 +1,8 @@
+module.exports = {
+  web: {
+    https: 4443,
+    share: 4444,
+    debugUserFakery: true,
+    debugSockPuppets: [ ... ],
+  }
+};

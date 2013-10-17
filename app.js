@@ -9,11 +9,12 @@ var jade_browser = require('jade-browser');
 var path = require('path');
 var socket = require('socket.io');
 
+var config = require('./config');
 var strcluster = require('./strcluster');
 var rooms = require('./rooms');
 
 var app = express();
-var cookies = express.cookieParser('secret'); // XXX how secret?
+var cookies = express.cookieParser(crypto.randomBytes(32).toString('base64'));
 var sessions = new connect.session.MemoryStore();
 var appserver = https.createServer({
   key: fs.readFileSync('./ssl-private-key.pem'),
@@ -69,9 +70,9 @@ app.get('*', function(req, res, next) {
   var cert = req.connection.getPeerCertificate();
   var username = cert.subject.emailAddress.toLowerCase();
   res.locals.user = req.session.user = {
-    //// To fake different users from different browsers:
-    //// username: md5(req.headers['user-agent']).substr(0,3) + username,
-    username: username,
+    username: (config.web.debugUserFakery
+      ? username.replace('@', '+' + md5(req.headers['user-agent']).substr(0,3) + '@')
+      : username),
     gravatar: md5(username)
   };
   next();
@@ -153,10 +154,13 @@ io.on('connection', function(socket) {
     data.gravatar = user.gravatar;
     room.put(user.username, data);
     
-    //// To add sock puppets:
-    //// setTimeout(function() {
-    ////   room.put('rcm@mit.edu', { text: data.text, gravatar: md5('rcm@mit.edu') });
-    //// }, 4000 * Math.random());
+    if (config.web.debugSockPuppets) {
+      config.web.debugSockPuppets.forEach(function(username) {
+        setTimeout(function() {
+          room.put(username, { text: data.text, gravatar: md5(username) });
+        }, 4000 * Math.random());
+      });
+    }
   });
   
   socket.on('reveal', function() {
@@ -175,9 +179,9 @@ io.on('connection', function(socket) {
   });
 });
 
-appserver.listen(process.env.PORT || 4443, function() {
+appserver.listen(config.web.https, function() {
   console.log('Express server listening on port %d in %s mode', appserver.address().port, app.settings.env);
 });
-ioserver.listen(process.env.SOCK_PORT || 4444, function() {
+ioserver.listen(config.web.share, function() {
   console.log('Socket.IO server listening on port %d', ioserver.address().port);
 });
