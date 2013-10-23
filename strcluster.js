@@ -12,11 +12,21 @@ function levenshtein() {
     var key = a < b ? a + '\0' + b : b + '\0' + a;
     if (memo.hasOwnProperty(key)) { return memo[key]; }
     
-    var a__ = a.substring(0, len_a-1);
-    var b__ = b.substring(0, len_b-1);
-    var ret = Math.min(distance(a__, b) + 1,
-                       distance(a, b__) + 1,
-                       distance(a__, b__) + (a[len_a-1] == b[len_b-1] ? 0 : 1));
+    var prev = new Uint16Array(len_b + 1);
+    var next = new Uint16Array(len_b + 1);
+    
+    for (var ii = 0; ii <= len_b; ii++) { prev[ii] = ii; }
+    for (var ii = 0; ii < len_a; ii++) {
+      next[0] = ii + 1;
+      for (var jj = 0; jj < len_b; jj++) {
+        next[jj+1] = Math.min(next[jj] + 1,
+                              prev[jj+1] + 1,
+                              prev[jj] + (a[ii] == b[jj] ? 0 : 1));
+      }
+      for (var jj = 0; jj <= len_b; jj++) { prev[jj] = next[jj]; }
+    }
+    var ret = next[len_b];
+    
     memo[key] = ret;
     return ret;
   }
