@@ -10,7 +10,7 @@ exports.setupRoom = function(name, username, sockets) {
   
   var room = rooms[name] = createRoom(name);
   room.addOwner(username);
-  room.on('winners', function(winners) {
+  room.on('winners', function() {
     sockets.in('/' + name).emit('winners', room.state, room.visibleWinners());
     sockets.in('/' + name + '#owners').emit('winners#owners', room.state, room.hiddenWinners());
   });
@@ -55,7 +55,7 @@ function createRoom(name) {
   emitter.ask = function(text) {
     emitter.question = text;
     emitter.emit('ask', text);
-  }
+  };
   emitter.put = function(key, val) {
     child.send({ put: key, val: val });
   };
@@ -108,14 +108,14 @@ function createRoom(name) {
 if (require.main === module) {
   var room = createRoom('main');
   
-  room.on('winners', function(winners) {
-    console.log('the winners are', winners);
+  room.on('winners', function() {
+    console.log('the winners are', room.hiddenWinners());
   });
   
-  room.put('maxg', { text: 'something', username: 'maxg' });
-  room.put('glittle', { text: 'something', username: 'glittle' });
-  room.put('a', { text: 'else', username: 'glittle' });
-  room.put('b', { text: 'else', username: 'glittle' });
-  room.put('kp', { text: 'something', username: 'kp' });
-  room.put('rcm', { text: 'something?', username: 'rcm' });
+  room.put('alice', { text: 'something', gravatar: 'alice' });
+  room.put('bob', { text: 'something', gravatar: 'bob' });
+  room.put('carol', { text: 'else', gravatar: 'carol' });
+  room.put('dan', { text: 'else', gravatar: 'dan' });
+  room.put('eve', { text: 'something', gravatar: 'eve' });
+  room.put('frank', { text: 'something?', gravatar: 'frank' });
 }
