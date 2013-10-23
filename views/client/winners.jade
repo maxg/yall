@@ -1,5 +1,5 @@
 each winner in winners
-  li.well.well-small(class="gravatar-#{winner.gravatars > 32 ? 'small' : 'large'}")
+  li.well.well-small(class="gravatar-#{winner.gravatars.length > 32 ? 'small' : 'large'}")
     p= winner.label
     each gravatar in winner.gravatars
       img.gravatar(src="https://secure.gravatar.com/avatar/#{gravatar}?s=60&d=mm")
