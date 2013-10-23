@@ -78,6 +78,7 @@ function createRoom(name) {
     emitter.question = '';
     winners.revealed = [];
     winners.redacted = [];
+    child.send({ reset: true });
     emitter.emit('reset');
   };
   

@@ -4,9 +4,10 @@ var strcluster = require('./strcluster');
 
 function content(x) { return x.text; }
 
-var cluster = strcluster.cluster(content);
+var cluster;
+var dict;
 
-var dict = {};
+reset();
 
 var queue = async.queue(function(_, next) {
   if (queue.length() > 0) {
@@ -28,8 +29,16 @@ function put(key, val) {
   process.nextTick(function() { queue.push(true); });
 }
 
+function reset() {
+  cluster = strcluster.cluster(content);
+  dict = {};
+}
+
 process.on('message', function(msg) {
   if (msg.put) {
-    put(msg.put, msg.val);
+    return put(msg.put, msg.val);
+  }
+  if (msg.reset) {
+    return reset();
   }
 });
