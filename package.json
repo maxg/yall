@@ -7,6 +7,7 @@
   },
   "dependencies": {
     "async": "~0.2.9",
+    "bunyan": "~0.22.0",
     "connect": "~2.9.1",
     "express": "~3.4.1",
     "jade": "~0.35.0",

@@ -1,6 +1,8 @@
 var events = require('events');
 var fork = require('child_process').fork;
 
+var logger = require('./room-logger');
+
 const rooms = {};
 
 exports.setupRoom = function(name, username, sockets) {
@@ -31,6 +33,7 @@ function createRoom(name) {
   var child = fork('./room-worker');
   var emitter = new events.EventEmitter();
   var owners = {};
+  var log = logger.log(name);
   
   emitter.name = name;
   emitter.settings = { reveal: false };
@@ -53,10 +56,12 @@ function createRoom(name) {
   };
   
   emitter.ask = function(text) {
+    log.info({ question: text }, 'question');
     emitter.question = text;
     emitter.emit('ask', text);
   };
   emitter.put = function(key, val) {
+    log.info({ username: key, answer: val.text }, 'answer');
     child.send({ put: key, val: val });
   };
   
@@ -69,11 +74,13 @@ function createRoom(name) {
   
   emitter.reveal = function() {
     if ( ! (emitter.settings.reveal || emitter.state.revealed)) {
+      log.info('reveal');
       emitter.state.revealed = true;
       emitter.emit('winners');
     }
   };
   emitter.reset = function() {
+    log.info('reset');
     emitter.state.revealed = false;
     emitter.question = '';
     winners.revealed = [];
@@ -84,6 +91,11 @@ function createRoom(name) {
   
   child.on('message', function(msg) {
     if (msg.winners) { // XXX and the new winners are different?
+      log.info({
+        clusters: msg.winners.map(function(winner) {
+          return { label: winner.label, size: winner.size };
+        })
+      }, 'clusters');
       winners.raw = msg.winners;
       winners.revealed = msg.winners.map(function(winner) {
         return {

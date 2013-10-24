@@ -17,7 +17,7 @@ Exec['add-apt node'] -> Package['nodejs']
 
 # Install packages
 package {
-  [ 'vim', 'python-software-properties', 'git', 'nodejs' ]:
+  [ 'vim', 'python-software-properties', 'git', 'make', 'nodejs' ]:
     ensure => 'installed';
 }
 
