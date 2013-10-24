@@ -69,6 +69,10 @@ textarea {
   color: #777;
 }
 
+#save span {
+  display: none;
+}
+
 .btn, .btn:hover, .btn:active {
   color: #ece9d7;
 }

@@ -19,6 +19,9 @@ block content
       span= user.username
       img.gravatar(src="https://secure.gravatar.com/avatar/#{user.gravatar}?s=60&d=mm")
     h3 My answer
+      span#save &nbsp;
+        span.start &middot; saving...
+        span.done &middot; saved
     textarea#answer(rows=3, spellcheck='false')
   h3 Common answers
     span#controls

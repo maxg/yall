@@ -148,13 +148,14 @@ io.on('connection', function(socket) {
     room.ask(data.text);
   });
   
-  socket.on('answer', function(data) {
+  socket.on('answer', function(data, ack) {
     if ( ! room) { return; }
     
     if (room.state.revealed && ! room.state.reveal) { return; }
     
     data.gravatar = user.gravatar;
     room.put(user.username, data);
+    ack();
     
     if (config.web.debugSockPuppets) {
       config.web.debugSockPuppets.forEach(function(username) {

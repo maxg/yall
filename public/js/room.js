@@ -19,7 +19,11 @@ $('textarea#question').keyup(debounce(function() {
   socket.emit('question', { text: $(this).val() });
 }, 250));
 $('textarea#answer').keyup(debounce(function() {
-  socket.emit('answer', { text: $(this).val().substring(0, 100) });
+  $('#save .start').fadeIn();
+  socket.emit('answer', { text: $(this).val().substring(0, 100) }, function() {
+    $('#save .start').hide();
+    $('#save .done').show().delay(2000).fadeOut();
+  });
 }, 500));
 
 $('#controls').on('click', '#reveal', function() {
@@ -51,5 +55,6 @@ function reset(state) {
   update(state, []);
   $('textarea#question').val('');
   $('textarea#answer').val('');
+  $('#save span').hide();
 }
 socket.on('reset', reset);
