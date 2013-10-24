@@ -9,7 +9,7 @@ block content
   h3 Q&amp;A mode
   form(method='post')
     div.btn-group.btn-group-vertical
-      button.btn(class=room.settings.reveal ? 'btn-info' : 'btn-inverse', name='reveal', value='true') Quick: common answers visible immediately
-      button.btn(class=room.settings.reveal ? 'btn-inverse' : 'btn-info', name='reveal', value='false') Deliberate: common answers hidden until revealed
+      button.btn(class=room.state.reveal ? 'btn-info' : 'btn-inverse', name='reveal', value='true') Quick: common answers visible immediately
+      button.btn(class=room.state.reveal ? 'btn-inverse' : 'btn-info', name='reveal', value='false') Deliberate: common answers hidden until revealed
 
   h3: a(href="/#{room.name}") &larr; Back to the room

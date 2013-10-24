@@ -122,7 +122,7 @@ app.post('/:room/settings', function(req, res) {
   if ( ! room.hasOwner(req.session.user.username)) {
     return res.render('error', { title: 'Permission denied' });
   }
-  room.settings.reveal = req.body.reveal == 'true';
+  room.state.reveal = req.body.reveal == 'true';
   res.redirect(req.path);
 });
 
@@ -151,7 +151,7 @@ io.on('connection', function(socket) {
   socket.on('answer', function(data) {
     if ( ! room) { return; }
     
-    if (room.state.revealed && ! room.settings.reveal) { return; }
+    if (room.state.revealed && ! room.state.reveal) { return; }
     
     data.gravatar = user.gravatar;
     room.put(user.username, data);

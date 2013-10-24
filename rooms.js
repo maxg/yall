@@ -36,8 +36,7 @@ function createRoom(name) {
   var log = logger.log(name);
   
   emitter.name = name;
-  emitter.settings = { reveal: false };
-  emitter.state = { revealed: false };
+  emitter.state = { reveal: false, revealed: false };
   emitter.question = '';
   var winners = {
     raw: [],
@@ -66,14 +65,14 @@ function createRoom(name) {
   };
   
   emitter.visibleWinners = function() {
-    return emitter.settings.reveal || emitter.state.revealed ? winners.revealed : winners.redacted
+    return emitter.state.reveal || emitter.state.revealed ? winners.revealed : winners.redacted
   };
   emitter.hiddenWinners = function() {
     return winners.revealed;
   };
   
   emitter.reveal = function() {
-    if ( ! (emitter.settings.reveal || emitter.state.revealed)) {
+    if ( ! (emitter.state.reveal || emitter.state.revealed)) {
       log.info('reveal');
       emitter.state.revealed = true;
       emitter.emit('winners');
