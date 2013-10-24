@@ -19,7 +19,7 @@ $('textarea#question').keyup(debounce(function() {
   socket.emit('question', { text: $(this).val() });
 }, 250));
 $('textarea#answer').keyup(debounce(function() {
-  socket.emit('answer', { text: $(this).val() });
+  socket.emit('answer', { text: $(this).val().substring(0, 100) });
 }, 500));
 
 $('#controls').on('click', '#reveal', function() {
