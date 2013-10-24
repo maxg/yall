@@ -47,6 +47,8 @@ var ioserver = https.createServer({
 }, ioapp);
 var io = socket.listen(ioserver);
 
+io.set('log level', 1);
+
 io.set('authorization', function(req, accept) {
   cookies(req, {}, function(err) {
     if (err) {
